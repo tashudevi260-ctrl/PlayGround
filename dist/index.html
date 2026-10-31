@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#5a8fc0" />
+  <meta name="description" content="A hand-built, fan-made Minecraft Bedrock-style voxel sandbox rendered with Three.js." />
+  <title>Minecraft · Bedrock Style</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%234f8a23'/><rect y='12' width='32' height='20' fill='%238a5a34'/><rect y='10' width='32' height='4' fill='%236caf3b'/></svg>" />
+  <script type="module" crossorigin src="./assets/index-DaA9fjqm.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CL6MEWjz.css">
+</head>
+<body>
+  <div id="app">
+    <canvas id="game" aria-label="Voxel world"></canvas>
+    <div id="waterOverlay" class="overlay-tint"></div>
+    <div id="vignette"></div>
+
+    <div id="hud" class="hidden">
+      <div id="topLeft">
+        <div class="chip mode-chip"><span class="chip-dot"></span><span id="modeLabel">CREATIVE</span></div>
+        <div id="coords" class="chip coords">X 0 · Y 0 · Z 0</div>
+        <div id="fps" class="chip fps">60 FPS</div>
+      </div>
+      <div id="topRight">
+        <button id="soundBtn" class="icon-btn" aria-label="Toggle sound" title="Toggle sound">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="sound-wave" d="M16 8c1.3 1 2 2.3 2 4s-.7 3-2 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button id="pauseBtn" class="icon-btn" aria-label="Pause" title="Pause">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" fill="currentColor"/><rect x="14" y="5" width="4" height="14" fill="currentColor"/></svg>
+        </button>
+        <button id="bagBtn" class="icon-btn" aria-label="Open inventory" title="Open inventory (E)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16v12H4zM8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 12h6" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+      </div>
+
+      <div id="crosshair" aria-hidden="true"></div>
+      <div id="blockLabel" class="block-label"></div>
+
+      <div id="hotbarWrap">
+        <div id="statusRow">
+          <div id="hearts" class="status-icons" aria-label="Health"></div>
+          <div id="hunger" class="status-icons" aria-label="Hunger"></div>
+        </div>
+        <div id="xpBar"><span></span></div>
+        <div id="hotbar"></div>
+      </div>
+
+      <div id="hint" class="hint">
+        <span><b>WASD</b> move</span><span><b>Space</b> jump</span><span><b>LMB</b> break</span><span><b>RMB</b> place</span><span><b>E</b> blocks</span><span><b>F</b> fly</span>
+      </div>
+
+      <div id="touchControls" class="touch-controls" aria-hidden="true">
+        <div id="joystick"><div id="joystickKnob"></div><div class="stick-ring"></div></div>
+        <div class="touch-actions">
+          <button id="touchFly" class="touch-btn small" aria-label="Toggle flight">
+            <svg viewBox="0 0 24 24"><path d="M3 13l8-2 3-7 2 1-1 7 6 3v2l-6-1-2 4h-2l1-5-7 1z" fill="currentColor"/></svg>
+          </button>
+          <button id="touchJump" class="touch-btn jump" aria-label="Jump">
+            <svg viewBox="0 0 24 24"><path d="M12 4l7 8h-4v7H9v-7H5z" fill="currentColor"/></svg>
+          </button>
+          <button id="touchBreak" class="touch-btn break" aria-label="Break block">
+            <svg viewBox="0 0 24 24"><path d="M4 20l7-7 2 2-7 7zM10 4c4 0 8 3 10 7l-3 2c-1-3-3-5-6-6z" fill="currentColor"/></svg>
+          </button>
+          <button id="touchPlace" class="touch-btn place" aria-label="Place block">
+            <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8l4 2.2v4.4L12 17l-4-2.4V10.2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="titleScreen" class="screen title-screen">
+      <div class="title-scrim"></div>
+      <div class="title-content">
+        <div class="edition">THE FAN-MADE TRIBUTE</div>
+        <h1 class="logo" aria-label="Minecraft">
+          <span class="logo-main">MINECRAFT</span>
+          <span class="logo-sub">BEDROCK STYLE</span>
+        </h1>
+        <div class="splash" id="splash">Also try 3D!</div>
+        <div class="menu">
+          <button id="playBtn" class="mc-btn primary" autofocus disabled>Play</button>
+          <button id="settingsBtn" class="mc-btn">Settings</button>
+          <button id="controlsBtn" class="mc-btn">Controls</button>
+          <button id="aboutBtn" class="mc-btn">About</button>
+        </div>
+        <div class="title-note">Seed <span id="seedLabel">—</span> · <span id="titleWorldInfo">loading world…</span></div>
+      </div>
+      <div class="title-footer">
+        <span>Fan-made voxel sandbox · Three.js</span>
+        <span>Not affiliated with Mojang or Microsoft</span>
+      </div>
+    </div>
+
+    <div id="loading" class="screen loading-screen">
+      <div class="loader-cube"><div class="face front"></div><div class="face back"></div><div class="face left"></div><div class="face right"></div><div class="face top"></div><div class="face bottom"></div></div>
+      <div class="loading-title">Building terrain</div>
+      <div class="loading-bar"><span></span></div>
+      <div class="loading-note">Carving caves · planting forests · filling the lake</div>
+    </div>
+
+    <div id="pauseScreen" class="screen dim hidden">
+      <div class="panel pause-panel">
+        <h2>Game Paused</h2>
+        <p class="panel-sub">Take a breath. The world can wait.</p>
+        <div class="menu compact">
+          <button id="resumeBtn" class="mc-btn primary">Back to Game</button>
+          <button id="pauseControlsBtn" class="mc-btn">Controls</button>
+          <button id="pauseSettingsBtn" class="mc-btn">Settings</button>
+          <button id="newWorldBtn" class="mc-btn">New World</button>
+          <button id="quitBtn" class="mc-btn">Quit to Title</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="inventoryScreen" class="screen dim hidden">
+      <div class="panel inventory-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Creative Blocks</h2>
+            <p class="panel-sub">Choose a block for the selected hotbar slot.</p>
+          </div>
+          <button id="inventoryClose" class="icon-btn close-btn" aria-label="Close inventory">✕</button>
+        </div>
+        <div id="inventoryGrid" class="inventory-grid"></div>
+      </div>
+    </div>
+
+    <div id="modalScreen" class="screen dim hidden">
+      <div class="panel modal-panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="modalTitle">Controls</h2>
+            <p class="panel-sub" id="modalSub">Move like a block person.</p>
+          </div>
+          <button id="modalClose" class="icon-btn close-btn" aria-label="Close">✕</button>
+        </div>
+        <div id="modalBody" class="modal-body"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+</body>
+</html>

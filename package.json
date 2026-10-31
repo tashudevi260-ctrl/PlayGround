@@ -1,0 +1,26 @@
+{
+  "name": "playground",
+  "version": "1.0.0",
+  "description": "Fan-made Minecraft Bedrock-style 3D voxel sandbox built with Three.js",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 3002",
+    "build": "vite build --base ./",
+    "preview": "vite preview --host 0.0.0.0 --port 3002"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tashudevi260-ctrl/PlayGround.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tashudevi260-ctrl/PlayGround/issues"
+  },
+  "homepage": "https://github.com/tashudevi260-ctrl/PlayGround#readme",
+  "dependencies": {
+    "three": "^0.187.0",
+    "vite": "^8.3.5"
+  }
+}
